@@ -98,14 +98,18 @@ if __name__=='__main__':
 	a=p.parse_args()
 	os.chdir("..")
 	pwd=os.getcwd()
-	sys.path+=[pwd+"/slim"]
+	sys.path.insert(0,pwd)
+	sys.path.insert(0,pwd+"/slim")
 	print(sys.path)
+	print("""""""""""""""""""""""""")
+	print(a.from_xml)
+	print("""""""""""""""""""""""")
 	# print(os.getcwd())
 	# process="export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim"
 	# os.system(process)
 	os.chdir("./object_detection")
 	prepare(a.train_img_dir,a.test_img_dir,a.ckpt_dir)
-	create_tfrecord(a.obj_list,train_csv_path=a.train_csv_path,test_csv_path=a.test_csv_path,from_xml=bool(a.from_xml))
+	create_tfrecord(a.obj_list,train_csv_path=a.train_csv_path,test_csv_path=a.test_csv_path,from_xml=(a.from_xml=='True'))
 	prepare_config(a.config_file,len(a.obj_list),a.batch_size)
 	create_pbtxt(a.obj_list.split('/'))
 	process="train.py --logtostderr --train_dir=training/ --pipeline_config_path=training/myconfig.config"

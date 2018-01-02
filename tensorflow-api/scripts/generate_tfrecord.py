@@ -84,6 +84,7 @@ def create_tf_example(group, path):
 
 
 def main(_):
+    global obj_lis
     writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
     path = os.path.join(os.getcwd(), 'images')
     obj_lis=FLAGS.obj_list.split("/")
