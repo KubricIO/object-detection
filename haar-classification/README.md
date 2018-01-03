@@ -14,5 +14,7 @@ To create your classifier:
 4. give the required inputs (positive images folder path and negative images folder path, etc.)
 	**Note the path to folders should be given as /home/username(i.e your username)/path
 
+Here is an example:
+![alt text](https://raw.githubusercontent.com/KubricIO/object-detection/master/haar-classification/example.jpg)
 
 
