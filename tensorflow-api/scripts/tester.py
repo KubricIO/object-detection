@@ -1,5 +1,5 @@
 import numpy as np
-import os
+import os,shutil
 import six.moves.urllib as urllib
 import sys
 import tarfile
@@ -8,26 +8,39 @@ import re
 import zipfile
 import argparse
 import IPython
+import export_inference_graph as eig
 from IPython import get_ipython
 from collections import defaultdict
 from io import StringIO
+import matplotlib
 from matplotlib import pyplot as plt
 from PIL import Image
 
 cwd=os.getcwd()
 sys.path.append("..")
+matplotlib.use('Agg')
 
 from utils import label_map_util
-
 from utils import visualization_utils as vis_util
+
+def update(file,m,s):
+	matchObj=re.match(r'model.ckpt-(.*).'+s,file)
+	if matchObj:
+		return max(m,int(matchObj.group(1)))
+	else:
+		return m
 
 if __name__=="__main__":
 	p=argparse.ArgumentParser()
 	p.add_argument("num_obj",help="number of objects")
 	p.add_argument("num_img",help="number of test images")
 	a=p.parse_args()
+	if os.path.exists("objects_inference_graph"):
+            shutil.rmtree("objects_inference_graph",ignore_errors=False,onerror=None)
 	if not os.path.exists(cwd+"/objects_inference_graph"):
 		os.makedirs("objects_inference_graph")
+	if not os.path.exists(cwd+"/Results"):
+		os.makedirs("Results")
 
 	lis=os.listdir("training")
 	maxm=0
@@ -35,15 +48,9 @@ if __name__=="__main__":
 	m2=0
 	m3=0
 	for file in lis:
-		matchObj=re.match(r'model.ckpt-(.*).meta',file)
-		if matchObj:
-			m1=max(m1,int(matchObj.group(1)))
-		matchObj=re.match(r'model.ckpt-(.*).data',file)
-		if matchObj:
-			m2=max(m2,int(matchObj.group(1)))
-		matchObj=re.match(r'model.ckpt-(.*).index',file)
-		if matchObj:
-			m3=max(m3,int(matchObj.group(1)))
+		m1=update(file,m1,'meta')
+		m2=update(file,m2,'index')
+		m3=update(file,m3,'data')
 		if m1==m2 and m2==m3:
 			maxm=m1
 
@@ -52,12 +59,14 @@ if __name__=="__main__":
 	for i,file in enumerate(os.listdir("test_images")):
 		os.rename("test_images/"+file,"test_images/image"+str(i)+".jpg")
 
+	# tf.app.run(eig.main)
 	process="export_inference_graph.py --input_type image_tensor --pipeline_config_path training/myconfig.config "
 	process=process+"--trained_checkpoint_prefix training/model.ckpt-"+str(maxm)+" --output_directory objects_inference_graph"
 	try:
-		os.system("python3 "+process)
-	except:
 		os.system("python "+process)
+	except:
+		os.system("python3 "+process)
+
 
 	MODEL_NAME = 'objects_inference_graph'
 	PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'

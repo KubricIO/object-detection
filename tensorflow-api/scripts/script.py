@@ -81,32 +81,25 @@ def create_tfrecord(obj_list,train_csv_path="",test_csv_path="",from_xml=True):
 def create_pbtxt(obj_list):
 	f=open("training/object-detection.pbtxt","w+")
 	for i,obj in enumerate(obj_list):
-		seg="item {\n  id: "+str(i)+"\n  name: '"+str(obj)+"'\n}"
+		seg="item {\n  id: "+str(i+1)+"\n  name: '"+str(obj)+"'\n}"
 		f.write(seg+"\n")
 
 if __name__=='__main__':
 	p=argparse.ArgumentParser()
-	p.add_argument('train_img_dir',help="")
-	p.add_argument('test_img_dir',help="")
-	p.add_argument('train_csv_path',help="")
-	p.add_argument('test_csv_path',help="")
-	p.add_argument('ckpt_dir',help="")
-	p.add_argument('--from_xml',help="")
-	p.add_argument('config_file',help="")
-	p.add_argument('obj_list',help="")
-	p.add_argument('batch_size',help="")
+	p.add_argument('train_img_dir',help="directory containing images to be trained")
+	p.add_argument('test_img_dir',help="directory containing images to be tested")
+	p.add_argument('train_csv_path',help="path to the csv file containing annotaions of training images")
+	p.add_argument('test_csv_path',help="path to the csv file containing annotaions of testing images")
+	p.add_argument('ckpt_dir',help="directory containg the checkpoint files for the configuration you are using")
+	p.add_argument('--from_xml',help="whether you have .xml files for creating the tfrecord")
+	p.add_argument('config_file',help="the configuration file")
+	p.add_argument('obj_list',help="list of your objects' names separated by '/'. Example: object_1/object_2/..../object_n")
+	p.add_argument('batch_size',help="the size of the batch which is going to be used in one step of the training")
 	a=p.parse_args()
 	os.chdir("..")
 	pwd=os.getcwd()
 	sys.path.insert(0,pwd)
 	sys.path.insert(0,pwd+"/slim")
-	print(sys.path)
-	print("""""""""""""""""""""""""")
-	print(a.from_xml)
-	print("""""""""""""""""""""""")
-	# print(os.getcwd())
-	# process="export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim"
-	# os.system(process)
 	os.chdir("./object_detection")
 	prepare(a.train_img_dir,a.test_img_dir,a.ckpt_dir)
 	create_tfrecord(a.obj_list,train_csv_path=a.train_csv_path,test_csv_path=a.test_csv_path,from_xml=(a.from_xml=='True'))
@@ -116,8 +109,4 @@ if __name__=='__main__':
 	try:
 		os.system("python3 "+process)
 	except:
-	# except ImportError:
 		os.system("python "+process)
-	# except:
-	# 	print("ImportError: No module named tensorflow")
-
