@@ -15,6 +15,6 @@ To create your classifier:
 	**Note the path to folders should be given as /home/username(i.e your username)/path
 
 Here is an example:
-![alt text](https://raw.githubusercontent.com/KubricIO/object-detection/master/haar-classification/example.png)
+![alt text](https://raw.githubusercontent.com/KubricIO/object-detection/master/haar-classification/example.jpg)
 
 
