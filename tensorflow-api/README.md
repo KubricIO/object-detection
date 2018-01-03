@@ -22,8 +22,5 @@ To test your model:
 1.run "python(or python3) tester.py -h.
 2.run "python(or python3) tester.py [arguments]
 You can see some boxes(look at the few images ex$y.png where y=1,2,3) on the images you provided for testing in the Results directory.
-![alt text](https://raw.githubusercontent.com/KubricIO/object-detection/master/tensorflow-api/ex1.png)
-![alt text](https://raw.githubusercontent.com/KubricIO/object-detection/master/tensorflow-api/ex2.png)
-![alt text](https://raw.githubusercontent.com/KubricIO/object-detection/master/tensorflow-api/ex3.png)
 
 In case of any problem you may refer to the tensorflow object-detection tutorial at https://pythonprogramming.net/introduction-use-tensorflow-object-detection-api-tutorial/.
